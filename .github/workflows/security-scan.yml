@@ -1,0 +1,55 @@
+name: "Security Scan"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  npm-audit:
+    name: NPM Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+
+  manifest-validation:
+    name: Manifest and HTML Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for dangerous permissions in manifest.json
+        run: |
+          echo "Checking manifest.json for dangerous permissions..."
+          DANGEROUS_PERMS=("tabs" "webRequest" "webRequestBlocking" "cookies" "browsingData" "history" "downloads")
+          
+          for perm in "${DANGEROUS_PERMS[@]}"; do
+            if grep -q "\"$perm\"" manifest.json; then
+              echo "⚠️  Warning: Found potentially dangerous permission: $perm"
+            fi
+          done
+          
+          echo "✓ Manifest permission check complete"
+
+      - name: Check for inline scripts in HTML files
+        run: |
+          echo "Checking HTML files for inline scripts..."
+          
+          if grep -r "<script>" *.html 2>/dev/null | grep -v "src="; then
+            echo "❌ Error: Found inline scripts in HTML files"
+            echo "Inline scripts are not allowed by Content Security Policy"
+            exit 1
+          fi
+          
+          echo "✓ No inline scripts found in HTML files"
