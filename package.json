@@ -1,0 +1,26 @@
+{
+  "name": "osint-extension",
+  "version": "1.3.1",
+  "description": "A Chrome browser extension for OSINT (Open Source Intelligence) operations",
+  "main": "background.js",
+  "scripts": {
+    "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
+    "lint:webext": "web-ext lint --ignore-files='node_modules/**' --ignore-files='.git/**' --ignore-files='OSINT-Extension-Prod/**' --ignore-files='OSINT-Extension-Testing-v1.3.1/**' --ignore-files='OSINT-Extension-ChromeStore-v1.3.1/**' --ignore-files='web-ext-artifacts/**'",
+    "lint:all": "npm run lint && npm run lint:webext"
+  },
+  "keywords": [
+    "chrome-extension",
+    "osint",
+    "browser-extension",
+    "manifest-v3"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-security": "^2.1.1",
+    "eslint-plugin-no-unsanitized": "^4.0.2",
+    "web-ext": "^8.3.0"
+  }
+}

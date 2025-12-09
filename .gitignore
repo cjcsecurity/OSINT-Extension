@@ -2,6 +2,9 @@
 node_modules/
 jspm_packages/
 
+# Package manager lock files
+package-lock.json
+
 # Build outputs
 dist/
 build/
@@ -38,6 +41,7 @@ Thumbs.db
 # Chrome Extension specific
 *.pem
 *.crx
+web-ext-artifacts/
 
 # Personal notes
 notes.txt

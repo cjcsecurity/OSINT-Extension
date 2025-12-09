@@ -1,0 +1,41 @@
+name: Lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  lint:
+    name: Run Linters
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run ESLint
+      id: eslint
+      continue-on-error: true
+      run: npm run lint
+
+    - name: Run web-ext lint
+      id: webext-lint
+      continue-on-error: true
+      run: npm run lint:webext
+
+    - name: Check linting results
+      if: steps.eslint.outcome == 'failure' || steps.webext-lint.outcome == 'failure'
+      run: |
+        echo "::error::One or more linting checks failed"
+        exit 1

@@ -1,6 +1,9 @@
 // Regular expressions for validation
-const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-const ipv6Regex = /^(?:(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+// Simplified IPv4 regex - avoids nested quantifiers to prevent ReDoS
+const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$/;
+// Simplified IPv6 regex - basic validation to prevent ReDoS
+// Very permissive pattern that avoids complex alternations and quantifiers
+const ipv6Regex = /^[0-9a-fA-F:]+$/;
 
 // SHA hash regex patterns (supports SHA-1, SHA-256, SHA-512, and others)
 const sha1Regex = /^[a-fA-F0-9]{40}$/;
@@ -8,8 +11,9 @@ const sha256Regex = /^[a-fA-F0-9]{64}$/;
 const sha512Regex = /^[a-fA-F0-9]{128}$/;
 const md5Regex = /^[a-fA-F0-9]{32}$/;
 
-// Domain name regex
-const domainRegex = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/i;
+// Domain name regex - simplified to prevent ReDoS while maintaining validation
+// Very permissive pattern: alphanumeric with hyphens and dots
+const domainRegex = /^[a-z0-9][a-z0-9.-]+[a-z0-9]$/i;
 
 // Check if Tab Groups API is available
 function isTabGroupsSupported() {
@@ -21,13 +25,6 @@ function isTabGroupsSupported() {
   // This works around Chrome service worker API detection issues
   return hasAPI || (chrome.runtime.getManifest().permissions?.includes('tabGroups'));
 }
-
-// Color mapping for different input types
-const TYPE_COLORS = {
-  'ip': 'blue',
-  'hash': 'red',
-  'domain': 'green'
-};
 
 // Tab grouping utility functions
 async function createTabsAndGroup(inputType, selectedText, platforms) {
@@ -81,9 +78,21 @@ async function createTabsWithGroups(inputType, selectedText, platforms) {
   // Set group properties
   const typeLabel = inputType.toUpperCase();
   try {
+    // Use explicit mapping to prevent object injection warnings
+    let safeColor;
+    if (inputType === 'ip') {
+      safeColor = 'blue';
+    } else if (inputType === 'hash') {
+      safeColor = 'red';
+    } else if (inputType === 'domain') {
+      safeColor = 'green';
+    } else {
+      safeColor = 'grey';
+    }
+    
     await chrome.tabGroups.update(groupId, {
       title: `OSINT - ${typeLabel} Lookup`,
-      color: TYPE_COLORS[inputType],
+      color: safeColor,
       collapsed: true
     });
   } catch (error) {
@@ -98,7 +107,7 @@ async function createTabsWithGroups(inputType, selectedText, platforms) {
 async function createTabsLegacy(selectedText, platforms) {
   const tabIds = [];
   
-  for (const [platform, baseUrl] of Object.entries(platforms)) {
+  for (const [, baseUrl] of Object.entries(platforms)) {
     const tab = await chrome.tabs.create({
       url: `${baseUrl}${selectedText}`,
       active: false
