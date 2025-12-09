@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+
+# Distribution directories
+OSINT-Extension-Prod/
+OSINT-Extension-Testing-v1.3.1/
+OSINT-Extension-ChromeStore-v1.3.1/
+
+# Documentation
+docs/
