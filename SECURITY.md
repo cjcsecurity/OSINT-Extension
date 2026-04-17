@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-This project is currently maintained by @staycold666 only.
+This project is currently maintained by @cjcsecurity only.
 
 If you discover a security vulnerability within this OSINT Lookup Chrome Extension, please send an email directly to the maintainer. All security vulnerabilities will be promptly addressed.
 
@@ -11,7 +11,7 @@ If you discover a security vulnerability within this OSINT Lookup Chrome Extensi
 This repository is protected by the following security measures:
 
 1. **Branch Protection**: The main branch is protected and requires code owner approval for any changes.
-2. **CODEOWNERS**: All code changes require review and approval from the repository owner (@staycold666).
+2. **CODEOWNERS**: All code changes require review and approval from the repository owner (@cjcsecurity).
 3. **Limited Contributor Access**: Only the repository owner has push access to the main branch.
 
 ## Supported Versions

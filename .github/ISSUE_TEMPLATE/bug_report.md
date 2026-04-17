@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help improve the extension
 title: '[BUG] '
 labels: bug
-assignees: staycold666
+assignees: cjcsecurity
 ---
 
 ## Bug Description

@@ -31,4 +31,4 @@ If you do not want the Extension to open OSINT tabs, simply do not use the right
 We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date.
 
 ## 7. Contact Us
-If you have any questions or concerns about this Privacy Policy, please contact us at: https://github.com/staycold666/OSINT-Extension/issues
+If you have any questions or concerns about this Privacy Policy, please contact us at: https://github.com/cjcsecurity/OSINT-Extension/issues
