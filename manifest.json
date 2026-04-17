@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "browser_specific_settings": {
     "gecko": {
-      "id": "osint-lookup@staycold666.github.io",
+      "id": "osint-lookup@cjcsecurity.github.io",
       "strict_min_version": "109.0"
     }
   },

@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the OSINT Lookup Chrome Extension
 
 ## Important Security Notice
 
-This repository is currently maintained only by the repository owner (@staycold666). All changes require approval from the repository owner.
+This repository is currently maintained only by the repository owner (@cjcsecurity). All changes require approval from the repository owner.
 
 ## Contribution Process
 

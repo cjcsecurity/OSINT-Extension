@@ -15,7 +15,7 @@ updates:
     open-pull-requests-limit: 5
     # Assign pull requests to the repository owner
     assignees:
-      - "staycold666"
+      - "cjcsecurity"
     # Apply security label to easily identify security updates
     labels:
       - "security"
@@ -30,7 +30,7 @@ updates:
       interval: "weekly"
       day: "monday"
     assignees:
-      - "staycold666"
+      - "cjcsecurity"
     labels:
       - "dependencies"
       - "github-actions"
